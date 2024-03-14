@@ -5,7 +5,17 @@ import {db} from "../Lib/db";
 import { error } from "console";
 
 
-
+interface Author {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
+    Blogs: Blog[];
+  }
+  
 // @TODO 📝 Fetch blogs by specific author id
 const getBlogByAuthorId = async (authorId: string): Promise<Blog[] | null> => {
     return db.blog.findMany({

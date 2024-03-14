@@ -1,5 +1,19 @@
 import { z } from "../../../node_modules/zod";
 
+interface Blog {
+    id: string;
+    title: string;
+    category: Category;
+    description: string;
+    slug: string;
+    content: string;
+    imageUrl: string;
+    author: Author;
+    authorId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: boolean;
+  }
 // define a schema for a blog
 const BlogSchema = z.object({
     title: z
