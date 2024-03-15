@@ -81,7 +81,7 @@ export async function createBlog(data: z.infer<typeof BlogSchema>) {
                 id: true,
             },
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.log("CREATE BLOG ERROR")
             return { error: "Something went wrong" }
         })
@@ -124,7 +124,7 @@ export async function updateBlog(id: string, data: z.infer<typeof BlogSchema>) {
                 },
             },
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.log("UPDATE BLOG ERROR")
             return { error: "Something went wrong" }
         })
@@ -140,7 +140,7 @@ export async function deleteBlog(id: string) {
                 id,
             },
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.log("DELETE BLOG ERROR")
             return { error: "Something went wrong" }
         })
