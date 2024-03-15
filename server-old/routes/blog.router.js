@@ -48,6 +48,15 @@ blogRouter.delete("/:id", async (req, res) => {
 //     }
 // })
 
+blogRouter.get("/:slug", async (req, res) => {
+    try {
+        const blog = await getBlogBySlug(req.params.slug, req.body)
+        return res.status(200).json(blog)
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+})
+
 blogRouter.get("/:slug/:authorId", async (req, res) => {
     try {
         const blog = await getBlogByAuthorId(

@@ -10,6 +10,8 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import NextLink from "next/link";
 
+import z from "zod";
+
 function MyForm() {
   const [file, setFile] = useState<File>();
   const [imageSrc, setImageSrc] = useState("");
@@ -44,6 +46,33 @@ function MyForm() {
     date: "",
   });
 
+  const BlogSchema = z.object({
+    title: z
+      .string()
+      .min(3, { message: "Title must be 3 characters long" })
+      .max(120, { message: "Title must be 120 characters or less" }),
+    category: z.enum([
+      "AI",
+      "BLOCKCHAIN",
+      "CLOUD",
+      "DEVOPS",
+      "METAVERSE",
+      "NFT",
+      "WEB3",
+    ]),
+    description: z
+      .string()
+      .min(3, { message: "Description must be more than 3 characters" })
+      .max(512, { message: "Description must be 512 characters or less" }),
+    content: z
+      .string()
+      .min(100, { message: "Content must be more than 100 characters" })
+      .max(16384, { message: "Content must be 16384 characters or less" }),
+    imageUrl: z.string(),
+
+    //imageUrl: z.string().url(),
+  });
+
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
 
@@ -56,13 +85,7 @@ function MyForm() {
     }
   };
 
-  const categories = [
-    "Blockchain",
-    "AI/ML",
-    "Metaverse",
-    "Market",
-    "Programming",
-  ];
+  const categories = ["Blockchain", "AI", "Metaverse", "Market", "Programming"];
 
   const generateSlug = (title: any) => {
     return title
@@ -72,7 +95,7 @@ function MyForm() {
       .trim(); // Trim leading and trailing spaces
   };
 
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (!formData.category) {
@@ -110,6 +133,48 @@ function MyForm() {
       contentError
     ) {
       setShouldMsgShow(false);
+      return;
+    }
+
+    const submittedBlog = {
+      title: formData.title,
+      category: formData.category.toUpperCase(),
+      description: formData.description,
+      content: editor?.getHTML().toString(),
+      //imageUrl: file?.webkitRelativePath,
+      imageUrl: "",
+    };
+
+    try {
+      BlogSchema.parse(submittedBlog);
+    } catch {
+      alert("Incorrect formatting for submitting blog");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submittedBlog),
+        // body: JSON.stringify({
+        //   title: formData.title,
+        //   category: formData.category,
+        //   description: formData.description,
+        //   content: editor?.getHTML().toString(),
+        //   imageURL: file?.webkitRelativePath,
+        // }),
+      });
+      if (!response.ok) {
+        throw new Error("Server responded with an error");
+      }
+      console.log("Blog submitted successfully:", await response.json());
+      setShouldMsgShow(true);
+    } catch (error) {
+      console.log("Error trying to submit blog: ", error);
+      alert("Server error with posting blog");
       return;
     }
 
@@ -278,12 +343,13 @@ function MyForm() {
               placeholder="Title"
               value={formData.title}
               onChange={handleInputChange}
-              className={`border w-full rounded-xl pl-[7px] py-2 text-white-700 leading-tight bg-slate-200 ${isTitleValid
+              className={`border w-full rounded-xl pl-[7px] py-2 text-white-700 leading-tight bg-slate-200 ${
+                isTitleValid
                   ? "dark:bg-slate-800 dark:border-0 dark:border-opacity-100 border-opacity-50 border-black"
                   : "bg-red-200 dark:bg-red-700"
-                } focus:outline-none focus:shadow-outline`}
+              } focus:outline-none focus:shadow-outline`}
               onFocus={() => setTitleError(false)}
-            //             className="border w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline" -->
+              //             className="border w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline" -->
             />
             <p className="text-sm text-gray-500 dark:text-slate-300 flex justify-end mr-5 mt-2">
               {wordCount(formData.title)} / 25 words
@@ -303,8 +369,8 @@ function MyForm() {
               value={formData.slug}
               readOnly
               className="border w-full rounded-xl pl-[7px] py-2 text-white-700 leading-tight bg-slate-200 dark:bg-slate-800 border-black dark:border-opacity-100 border-opacity-50 focus:outline-none focus:shadow-outline"
-            //<!--             onChange={handleInputChange}
-            //        className="border w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline"
+              //<!--             onChange={handleInputChange}
+              //        className="border w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline"
             />
           </div>
           {/* <label className={`block mt-3 text-sm font-medium text-white `}>
@@ -317,7 +383,6 @@ function MyForm() {
             <div className="text-red-600">Invalid Input for Image</div>
           )}
 
-
           {/* Description */}
           <div className="mt-4">
             <div>
@@ -327,12 +392,13 @@ function MyForm() {
                 placeholder="Description"
                 value={formData.description}
                 onChange={handleInputChange}
-                className={`border w-full rounded-xl pl-[7px] py-2 text-white-700 leading-tight bg-slate-200 ${isDescriptionValid
+                className={`border w-full rounded-xl pl-[7px] py-2 text-white-700 leading-tight bg-slate-200 ${
+                  isDescriptionValid
                     ? "border dark:bg-slate-800 border-black dark:border-opacity-100 border-opacity-50"
                     : "bg-black-700"
-                  } focus:outline-none focus:shadow-outline`}
+                } focus:outline-none focus:shadow-outline`}
                 onFocus={() => setDescError(false)}
-              //<!--               className="border  w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline"
+                //<!--               className="border  w-full rounded-xl py-2 text-white leading-tight bg-transparent focus:outline-none focus:shadow-outline"
               />
             </div>
             <p className="m-0 text-sm text-gray-500 dark:text-slate-300 flex justify-end mr-5">
@@ -353,7 +419,6 @@ function MyForm() {
           {contentError && (
             <div className="text-red-600">Invalid Input for Content</div>
           )}
-
 
           {/* Buttons */}
           <div className="flex justify-between">

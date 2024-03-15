@@ -12,20 +12,25 @@ import {
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import SelectedCategorySingleton from "../components/globalSelectedCategory";
-
+import Head from "next/head";
+import logo from "../../../public/logo.png";
 type NewsletterPopupProps = {
   onClose: () => void;
-}
+};
 
-function NewsletterPopup({onClose}: NewsletterPopupProps) {
+function NewsletterPopup({ onClose }: NewsletterPopupProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="mydiv w-full md:w-2/3 lg:w-1/2 xl:w-1/3 h-2/3 md:h-1/2 lg:h-2/5 xl:h-1/3 p-4">
         <div className="bg-white grid grid-cols-2 gap-2 p-4 rounded-lg shadow-lg text-center">
           <div>
-            <h2 className="text-2xl text-black p-2 font-bold mb-2">Welcome to LBA Blogs</h2>
+            <h2 className="text-2xl text-black p-2 font-bold mb-2">
+              Welcome to LBA Blogs
+            </h2>
             {/* <p className="mb-4 text-xs text-black">Your guiding light in the world of decentralization and innovation!</p> */}
-            <p className="mb-1 text-sm text-black">We are currently working on our newsletter subscription feature.</p>
+            <p className="mb-1 text-sm text-black">
+              We are currently working on our newsletter subscription feature.
+            </p>
             <p className="mb-3 text-sm text-black">Thankyou for waiting😊</p>
             <form className="flex flex-col items-center">
               {/* <input
@@ -37,7 +42,10 @@ function NewsletterPopup({onClose}: NewsletterPopupProps) {
                 Close
               </button>
             </form>
-            <button onClick={onClose} className="absolute top-0 right-0 mt-2 mr-2">
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-0 mt-2 mr-2"
+            >
               &times;
             </button>
           </div>
@@ -46,7 +54,7 @@ function NewsletterPopup({onClose}: NewsletterPopupProps) {
               src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.d275875e.png&amp;w=1080&amp;q=75"
               alt="LBA Logo"
               width="250"
-              ></img>
+            ></img>
           </div>
         </div>
       </div>
@@ -54,10 +62,12 @@ function NewsletterPopup({onClose}: NewsletterPopupProps) {
   );
 }
 
-
 function NewsletterSection() {
-
   const [showPopup, setShowPopup] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowPopup(true);
+  };
 
   return (
     <section className="newslettersec bg-gray-300 dark:bg-gray-900 dark:text-white py-8 px-4 md:px-8 lg:px-20 dark:bg-slate-900/75">
@@ -92,10 +102,11 @@ function NewsletterSection() {
                     className="bg-white w-[50%] items-right p-2 text-black flex-1 rounded-l-lg"
                     style={{ minWidth: "200px" }}
                   />
-                  <button 
-                    type = "button"
-                    onClick={() => setShowPopup(true)}
-                    className="bg-white text-orange-700 hover:text-orange-600 font-bold py-2 px-4 rounded-r-lg transition-colors duration-300">
+                  <button
+                    type="button"
+                    onClick={handleButtonClick}
+                    className="bg-white text-orange-700 hover:text-orange-600 font-bold py-2 px-4 rounded-r-lg transition-colors duration-300"
+                  >
                     Join Us {">"}
                   </button>
                 </form>
@@ -213,12 +224,11 @@ function Footer() {
 export default function Layout() {
   return (
     <>
-      <head>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'></meta>
-      </head>
-        <NewsletterSection />
-        <Footer />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <NewsletterSection />
+      <Footer />
     </>
   );
 }
-

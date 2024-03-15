@@ -1,5 +1,7 @@
-const db = require("../utils/db.server")
 const BlogSchema = require("../schema/blog")
+const { PrismaClient } = require("@prisma/client")
+
+const db = new PrismaClient()
 
 // @TODO 📝 Fetch blogs by specific author id
 const getBlogByAuthorId = async (authorId) => {
@@ -24,6 +26,12 @@ const getBlogByCategory = async (category) => {
     })
 }
 
+const getBlogBySlug = async (slug) => {
+    return db.blog.findUnique({
+        where: { slug: String(slug) },
+    })
+}
+
 // mutations
 const createBlog = async (blogData) => {
     const validatedBlog = BlogSchema.safeParse(blogData)
@@ -36,7 +44,6 @@ const createBlog = async (blogData) => {
         data: validatedBlog.data,
         select: {
             id: true,
-            slug: true,
         },
     })
 }
@@ -60,9 +67,11 @@ const updateBlog = async (slug, blogData) => {
 //             title: blogData.title,
 //             category: blogData.category,
 //             description: blogData.description,
+//             slug: blogData.slug,
 //             content: blogData.content,
 //             imageUrl: blogData.imageUrl,
 //             authorId: blogData.authorId,
+//             author: blogData.author,
 //             datePublished: blogData.datePublished,
 //         },
 //         select: {
@@ -92,6 +101,7 @@ module.exports = {
     createBlog,
     updateBlog,
     deleteBlog,
+    getBlogBySlug,
     getBlogByAuthorId,
     getAllBlogs,
     getBlogByCategory,

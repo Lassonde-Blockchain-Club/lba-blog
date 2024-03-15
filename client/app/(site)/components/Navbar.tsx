@@ -59,7 +59,7 @@ const Navbar = () => {
               </Link>
               <span className="text-white text-4xl">/</span>
               <Link
-                href=""
+                href="\"
                 // href="https://lba-blog.vercel.app/"
                 className="dark:text-white text-slate-700 cursor-pointer text-xl hover:text-orange-300 dark:hover:text-orange-300  transform duration-150"
               >

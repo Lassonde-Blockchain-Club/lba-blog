@@ -1,4 +1,5 @@
-import { z } from "zod"
+//import { z } from "zod"
+const { z } = require("zod")
 
 // define a schema for a blog
 const BlogSchema = z.object({
@@ -24,6 +25,7 @@ const BlogSchema = z.object({
         .min(100, { message: "Content must be more than 100 characters" })
         .max(16384, { message: "Content must be 16384 characters or less" }),
     imageUrl: z.string().url(),
+    slug: z.string(),
 })
 
 // // create a blog object
@@ -39,10 +41,10 @@ const BlogSchema = z.object({
 // }
 
 // try {
-//     const validatedBlog = BlogSchema.parse(blog)
+//     const validatedBlog = BlogSchema.safeParse(blog)
 //     console.log(validatedBlog)
 // } catch (error) {
 //     console.error(error)
 // }
 
-module.exports = { BlogSchema }
+module.exports = BlogSchema

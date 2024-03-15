@@ -12,15 +12,16 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage,  numTotalPages, on
   var hasNext = currentPage < numTotalPages;
 
   return (
-    <div className="flex items-center justify-center gap-x-4 text-base">
-      
-      {<button onClick={() => hasPrev && onChangePage(currentPage - 1)} className={hasPrev ? "active" : "inactive text-transparent"}>
-        Prev
+    <div className="flex items-center justify-center gap-x-4 text-base mb-8 mt-5">
+      {/* <button onClick={() => onChangePage(1)}>
+        &lt;&lt;
+      </button> */}
+
+      <button onClick={() => hasPrev && onChangePage(currentPage - 1)} className={hasPrev ? "active" : "inactive text-transparent"}>
+        &lt;
       </button>
-      }
 
       {Array.from({ length: numTotalPages }, (_, i) => i + 1).map((page) => {
-
         let buttonClasses = "";
         if (currentPage === page) {
           buttonClasses = "active text-blue-300";
@@ -32,11 +33,13 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage,  numTotalPages, on
         );
       })}
 
-      {<button onClick={() => hasNext && onChangePage(currentPage + 1)} className={hasNext ? "active" : "inactive text-transparent "}>
-        Next
+      <button onClick={() => hasNext && onChangePage(currentPage + 1)} className={hasNext ? "active" : "inactive text-transparent"}>
+        &gt;
       </button>
-      }
 
+      {/* <button onClick={() => onChangePage(numTotalPages)}>
+        &gt;&gt;
+      </button> */}
     </div>
   );
 };

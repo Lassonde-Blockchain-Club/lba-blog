@@ -20,7 +20,6 @@ import { date } from "zod";
 import { title } from "process";
 
 export default function Home() {
-  //get props and paths the blog and map the data to the page
 
   const cardData = [
     {
@@ -182,7 +181,6 @@ export default function Home() {
               </button>
             </Link>
         </div>
-
     </>
   );
 }
